@@ -1,2 +1,2 @@
-# svelteAnimation
- Svelte animation & transition
+# Svelte vite tailwindcss daisyUI 
+ Svelte animation & transition starting project
