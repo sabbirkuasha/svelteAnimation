@@ -26,6 +26,10 @@
   function addBoxes(){
     boxes = [...boxes, inputBox.value]
   }
+
+  function discard(value){
+    boxes=boxes.filter(el=> el !== value)
+  }
 </script>
 
 <main>
@@ -56,13 +60,19 @@
 
   <div class="flex">
     {#each boxes as box}
-      <div class="p-3" transition:scale ={
+      <div class="p-3" 
+        transition:fly =
         {
-          delay:0,
-          duration:200,
-          easing:cubicIn,
+          {
+            delay:0,
+            duration:200,
+            easing:cubicIn,
+            x: 0,
+            y:200,
+          }
         }
-      }>
+        on:click={discard.bind(this,box)}
+      >
         <div class="card w-96 bg-neutral text-neutral-content">
           <div class="card-body items-center text-center">
             <h2 class="card-title">{box}!</h2>
