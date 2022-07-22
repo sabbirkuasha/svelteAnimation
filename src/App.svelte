@@ -20,8 +20,10 @@
 
  
   let inputBox
-
   let boxes = []
+  let showParagraph = true
+  $:pulseAnimClass = ""
+
 
   function addBoxes(){
     boxes = [...boxes, inputBox.value]
@@ -30,9 +32,17 @@
   function discard(value){
     boxes=boxes.filter(el=> el !== value)
   }
+
+  function puleAnim(){
+    pulseAnimClass = "animate-bounce"
+    setTimeout(()=>{
+      pulseAnimClass = ""
+    },3000)
+  }
 </script>
 
-<main>
+<main class="w-screen text-center overflow-hidden	">
+
   <div class="pb-3">
     <div class="pb-3 radial-progress" style="--value:{$progress*100}; --size:12rem; --thickness: 2rem;">
       80%
@@ -45,43 +55,78 @@
     </progress>  
   </div>
 
-  <div class="w-full pb-3">
-    <div class="form-control">
-      <div class="input-group ">
+
+
+  <div class="pb-3">
+    <div class="form-control items-center flex justify-center">
+      <div class="input-group w-1/2 flex justify-center">
         <input  type="text"
-                bind:this={inputBox} 
-                placeholder="Type here" 
-                class="input input-bordered input-primary w-full max-w-xs" />
+        bind:this={inputBox} 
+        placeholder="Type here" 
+        class="input input-bordered input-primary w-full max-w-xs items-center" />
+        
         <button class="btn" on:click={addBoxes}>Go</button>
       </div>
     </div>
   </div>
 
+  <div>
+    <button on:click={()=>{
+      showParagraph = !showParagraph
+    }}
+    class="mb-3 btn btn-primary animate-pulse">
+      Toggle
+    </button>
 
-  <div class="flex">
-    {#each boxes as box}
-      <div class="p-3" 
-        transition:fly =
+    {#if showParagraph}
+      <p transition:fly|local ={
         {
-          {
-            delay:0,
-            duration:200,
-            easing:cubicIn,
-            x: 0,
-            y:200,
-          }
+          delay:0,
+          duration:200,
+          easing:cubicIn,
+          x: 200,
+          y: 0,
         }
-        on:click={discard.bind(this,box)}
-      >
-        <div class="card w-96 bg-neutral text-neutral-content">
-          <div class="card-body items-center text-center">
-            <h2 class="card-title">{box}!</h2>
+      }>
+        Now You See Me
+      </p>  
+    <div class="flex">
+      {#each boxes as box}
+        <div class="p-3" 
+          transition:fly|local =
+          {
+            {
+              delay:0,
+              duration:200,
+              easing:cubicIn,
+              x: 0,
+              y:200,
+            }
+          }
+          on:click={discard.bind(this,box)}
+          on:introstart={puleAnim}
+        >
+          <div class="card w-96 bg-neutral text-neutral-content {pulseAnimClass}">
+            <div class="card-body items-center text-center">
+              <h2 class="card-title">{box}!</h2>
+            </div>
           </div>
         </div>
-      </div>
-    {/each}
+      {/each}
+    </div>
+    {:else}
+      <p transition:fly ={
+        {
+          delay:1,
+          duration:200,
+          easing:cubicIn,
+          x: -200,
+          y: 0,
+        }
+      }>Now You Not</p>
+    {/if}
+
   </div>
-  
 </main>
 
 <style>
