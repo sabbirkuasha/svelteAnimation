@@ -4,6 +4,7 @@
   import {cubicIn, elasticIn, elasticOut, expoInOut, quadOut, quintIn} from 'svelte/easing'
   import Spring from './Spring.svelte';
   import {fade, fly, slide, scale} from 'svelte/transition'
+  import {flip} from 'svelte/animate'
 
   // for different easing function visit this url
   // https://svelte.dev/repl/6904f0306d6f4985b55f5f9673f762ef?version=3.4.1
@@ -26,7 +27,7 @@
 
 
   function addBoxes(){
-    boxes = [...boxes, inputBox.value]
+    boxes = [inputBox.value, ...boxes ]
   }
 
   function discard(value){
@@ -91,8 +92,9 @@
         Now You See Me
       </p>  
     <div class="flex">
-      {#each boxes as box}
-        <div class="p-3" 
+      {#each boxes as box(box)}
+        <div id={box}
+        class="p-3" 
           transition:fly|local =
           {
             {
@@ -105,8 +107,13 @@
           }
           on:click={discard.bind(this,box)}
           on:introstart={puleAnim}
+          animate:flip ={
+            {
+              duration:200
+            }
+          }
         >
-          <div class="card w-96 bg-neutral text-neutral-content {pulseAnimClass}">
+          <div class="card w-96 bg-neutral text-neutral-content">
             <div class="card-body items-center text-center">
               <h2 class="card-title">{box}!</h2>
             </div>
